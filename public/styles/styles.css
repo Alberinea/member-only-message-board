@@ -87,7 +87,7 @@ select {
   }
 }
 
-@media (min-width: 1520px) {
+/* @media (min-width: 1520px) {
   .container {
     max-width: 1400px !important;
   }
@@ -97,9 +97,9 @@ select {
   .container {
     max-width: 1600px !important;
   }
-}
+} */
 
-@media (min-width: 1920px) {
+/* @media (min-width: 1920px) {
   .container {
     max-width: 1800px !important;
   }
@@ -115,8 +115,13 @@ select {
   .container {
     max-width: 2200px !important;
   }
+} */
+
+form.container {
+  max-width: 500px;
 }
 
-p, h5 {
+p,
+h5 {
   margin: 0 !important;
 }

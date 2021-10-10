@@ -1,9 +1,15 @@
 import express from 'express';
-import { indexController } from '../controllers/indexController.js';
+import {
+  indexGetController,
+  indexPostController,
+} from '../controllers/indexController.js';
 
-const router = express.Router();
+const indexRouter = express.Router();
 
-router.get('/', indexController);
+indexRouter.get('/', indexGetController);
 
-export default router;
+indexRouter.post('/', indexPostController);
+
+
+export default indexRouter;
 

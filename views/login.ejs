@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Illusion</title>
+</head>
+<body>
+  <%- include('./partials/head.ejs') %> 
+
+  <body>
+    <%- include('./partials//header.ejs') %> 
+
+    <section class="py-5 d-flex justify-content-center">
+    <form action="/login" method="POST" class="container border rounded p-3 mx-3">
+
+      <% if (success.length > 0) { %>
+        <div class="alert alert-success p-2" role="alert"><%= success %></div>
+      <% } %> 
+
+      <% if (messages.error) { %>
+        <div class="alert alert-danger p-2" role="alert"><%= messages.error %></div>
+      <% } %> 
+
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input name="username" required type="text" class="form-control" id="username">
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input name="password" required type="password" class="form-control" id="password">
+      </div>
+      <button type="submit" class="btn btn-primary mb-3">Login</button>
+      <p class="">Don't have an account? <a href="/register" class="text-primary">Register</a></p> 
+    </form>
+  </section>
+</body>
+</html>

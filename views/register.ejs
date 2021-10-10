@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register | Illusion</title>
+</head>
+<body>
+  <%- include('./partials/head.ejs') %> 
+
+  <body>
+    <%- include('./partials//header.ejs') %> 
+  
+  <section class="py-5 d-flex justify-content-center">
+    <form action="/register" method="POST" class="container border rounded p-3 mx-3">
+      <% if (errors.length > 0) { %>
+        <% errors.forEach(error =>  { %>
+          <div class="alert alert-danger p-2" role="alert"><%= error %></div>
+        <% }) %> 
+      <% } %> 
+
+      <div class="mb-3">
+        <label for="name" class="form-label">Username</label>
+        <input value="<%= name ? name : ''%>" name="name" required type="text" class="form-control" id="name">
+        <div class="valid-feedback">
+          Looks good!
+        </div>
+        <div class="invalid-feedback name-feedback"></div>
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email address</label>
+        <input value="<%= email ? email : ''%>" name="email" required type="email" class="form-control" id="email">
+        <div class="valid-feedback">
+          Looks good!
+        </div>
+        <div class="invalid-feedback email-feedback"></div>
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input autocomplete="on" value="<%= password ? password : ''%>" name="password" required type="password" class="form-control" id="password">
+        <div class="valid-feedback">
+          Looks good!
+        </div>
+        <div class="invalid-feedback password-feedback"></div>
+      </div>
+      <div class="mb-3">
+        <label for="password2" class="form-label">Confirm Password</label>
+        <input autocomplete="on" value="<%= password2 ? password2 : ''%>" name="password2" required type="password" class="form-control" id="password2">
+        <div class="valid-feedback">
+          Looks good!
+        </div>
+        <div class="invalid-feedback password2-feedback"></div>
+      </div>
+      <div class="mb-3 form-check">
+        <label class="form-check-label" for="check1">Agree to terms and conditions</label>
+        <input name="agreement" required type="checkbox" class="form-check-input" id="check1">
+      </div>
+      <button type="submit" class="btn btn-primary mb-3">Sign Up</button>
+      <p class="">Already have an account? <a href="/login" class="text-primary">Login</a></p> 
+    </form>
+  </section>
+
+  <script>
+    const validateInput = (value, elID) => {
+      let regex
+      if (elID === 'name' || elID ===  'password') regex = new RegExp('^[a-zA-Z0-9]{1,999}$');
+      if (elID === 'email') regex = new RegExp('^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$')
+      const input = document.getElementById(`${elID}`)
+      const inputFeedback = document.querySelector(`.${elID}-feedback`)
+
+      if (value.length === 0) {
+        input.classList.remove('is-invalid')
+        input.classList.remove('is-valid')
+      }
+      else if ((elID === 'name' || elID ===  'password' ) && !regex.test(value)) {
+        inputFeedback.innerText = 'No symbols or spacing allowed'
+        input.classList.remove('is-valid')
+        input.classList.add('is-invalid')
+      } else if ((elID === 'email') && !regex.test(value)) {
+        inputFeedback.innerText = 'Wrong email format'
+        input.classList.remove('is-valid')
+        input.classList.add('is-invalid')
+      } else if ((elID === 'name' || elID === 'password') && (value.length < 4 || value.length > 12)) {
+        inputFeedback.innerText = `${elID === 'name' ? 'Username' : 'Password'} should be between 4 to 12 characters`
+        input.classList.remove('is-valid')
+        input.classList.add('is-invalid')
+      } else if (elID === 'password2' && input.value !== document.getElementById('password').value) {
+        inputFeedback.innerText = 'Password and Confirmation Password do not match'
+        input.classList.remove('is-valid')
+        input.classList.add('is-invalid')
+      } else {
+        input.classList.remove('is-invalid')
+        input.classList.add('is-valid')
+      }
+    }
+
+  document.querySelectorAll('input').forEach(input => {
+    input.addEventListener('input', () => validateInput(input.value, input.id))
+  })
+  </script>
+</body>
+</html>
