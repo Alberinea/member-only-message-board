@@ -13,23 +13,25 @@
 
     <div class="collapse navbar-collapse fw-bold" id="navbar">
       <ul class="navbar-nav ms-auto">
-
-          <% if (!user) { %>
-            <li class="nav-item">
-              <a class="nav-link" href="/login">Login</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/register">Register</a>
-            </li>
-          <% } %> 
-
-          <% if (user) { %>
-            <li class="navbar-text fw-bolder"><%= user.name %></li>
-            <li class="nav-item"><a class="nav-link" href="/logout">Log out</a></li>
-          <% } %> 
-
-        </ul>
-      </div>
-
+        <% if (!user) { %>
+        <li class="nav-item">
+          <a class="nav-link" href="/login">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/register">Register</a>
+        </li>
+        <% } %> <% if (user) { %>
+        <li class="navbar-text fw-bolder"><%= user.name %></li>
+        <form id="logout" action="/logout" method="POST">
+          <li
+            onclick="document.getElementById('logout').submit()"
+            class="nav-item"
+          >
+            <a class="nav-link" href="#">Log out</a>
+          </li>
+        </form>
+        <% } %>
+      </ul>
+    </div>
   </nav>
 </header>

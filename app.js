@@ -10,6 +10,8 @@ import initPassport from './Utils/passport.js';
 import passport from 'passport';
 import session from 'express-session';
 import flash from 'express-flash';
+import sanitize from 'express-mongo-sanitize'
+import xss from 'xss-clean'
 
 const app = express();
 const port = 3000;
@@ -36,6 +38,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static('public'));
 app.use(logger('dev'));
+
+//sanitization
+app.use(sanitize())
+app.use(xss());
 
 // Session
 app.use(
@@ -67,6 +73,4 @@ app.use((req, res) => {
 
 app.listen(port, console.log(`listening on port ${port}`));
 
-// TODO 2. Add delete request
-// TODO 3. Add pagination
 // TODO 4. Add Validation and Sanitization 

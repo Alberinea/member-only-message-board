@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import User from '../models/user.js';
+import { validationResult } from 'express-validator';
 
 export const registerGetController = async (req, res) => {
   res.status(200).render('register', {
@@ -13,18 +14,18 @@ export const registerGetController = async (req, res) => {
 
 export const registerPostController = async (req, res, next) => {
   if (Object.keys(req.body).length === 0) {
-    res.redirect('/register');
-    return;
+    return res.redirect('/register');
   }
 
+  
   const errors = [];
-  const regex = new RegExp('^[a-zA-Z0-9]{4,12}$');
+  const regex = new RegExp('^[a-zA-Z0-9]{1,30}$');
   const name = req.body.name;
   const email = req.body.email;
   const password = req.body.password;
   const password2 = req.body.password2;
   const agreement = req.body.agreement;
-
+  
   if (!regex.test(req.body.name) || !regex.test(req.body.password)) {
     errors.push('No symbols or spacing allowed');
   }
@@ -40,7 +41,10 @@ export const registerPostController = async (req, res, next) => {
   if (!agreement) {
     errors.push('Please check the agreement');
   }
-
+  if (!validationResult(req).isEmpty()) {
+    errors.push('Invalid email address format');
+  }
+  
   if (errors.length > 0) {
     res.render('register', { errors, name, email, password, password2 });
   } else {
@@ -54,15 +58,18 @@ export const registerPostController = async (req, res, next) => {
       };
       const newUser = new User(user);
       await newUser.save();
-      req.flash('success_msg', 'You have successfully registered!');
+      req.flash('success', 'You have successfully registered!');
       res.redirect('/login');
     } catch (error) {
       console.log(error);
 
-      if (error.code === 11000) {
-        const value =
-          Object.keys(error.keyValue)[0] === 'email' ? 'Email' : 'Username';
-        errors.push(`${value} has already been taken`);
+      if (error._message === 'users validation failed') {
+        Object.keys(error.errors).forEach((value) => {
+          value = value === 'name' ? 'username' : value;
+          errors.push(
+            `${value[0].toUpperCase() + value.slice(1)} has already been taken`
+          );
+        });
         res.render('register', { errors, name, email, password, password2 });
       }
     }
