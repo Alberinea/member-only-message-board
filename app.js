@@ -9,17 +9,18 @@ import logoutRouter from './routes/logout.js';
 import initPassport from './Utils/passport.js';
 import passport from 'passport';
 import session from 'express-session';
+import MongoStore from 'connect-mongo';
 import flash from 'express-flash';
-import sanitize from 'express-mongo-sanitize'
-import xss from 'xss-clean'
+import sanitize from 'express-mongo-sanitize';
+import xss from 'xss-clean';
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 initPassport(passport);
 dotenv.config();
 
-mongoose
+const clientPromise = mongoose
   .connect(
     `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.4gvsm.mongodb.net/${process.env.COLLECTION}?retryWrites=true&w=majority`,
     {
@@ -27,6 +28,7 @@ mongoose
       useUnifiedTopology: true,
     }
   )
+  .then((db) => db.connection.getClient())
   .then(console.log('connected to the database'))
   .catch((err) => {
     console.log(err);
@@ -40,7 +42,7 @@ app.use(express.static('public'));
 app.use(logger('dev'));
 
 //sanitization
-app.use(sanitize())
+app.use(sanitize());
 app.use(xss());
 
 // Session
@@ -49,6 +51,12 @@ app.use(
     secret: process.env.SECRET,
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({
+      clientPromise,
+      dbName: process.env.COLLECTION,
+      touchAfter: 24 * 3600,
+      ttl: 14 * 24 * 3600,
+    }),
   })
 );
 
